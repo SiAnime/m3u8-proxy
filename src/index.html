@@ -1,204 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>M3U8 Proxy</title>
-    <meta name="title" content="M3U8 Proxy" />
+    <title>M3U8 Proxy Player</title>
     <meta name="description" content="Playground for testing m3u8 proxy." />
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        font-family: Arial, sans-serif;
-      }
-      .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-      }
-      #player {
-        width: 100%;
-        max-width: 890px;
-        height: 100%;
-        max-height: 500px;
-        background: black;
-      }
-      .test {
-        width: 100%;
-        max-width: 800px;
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        margin: 0 auto;
-        box-sizing: border-box;
-      }
-      .result-label {
-        font-weight: bold;
-        font-size: 18px;
-        color: #333;
-      }
-      #url {
-        width: 100%;
-        max-width: 400px;
-        font-size: 15px;
-        border: 2px solid #333;
-        padding: 10px;
-        box-sizing: border-box;
-      }
-      .btn {
-        padding: 10px 20px;
-        font-size: 15px;
-        border: 2px solid #333;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .btn-play {
-        background-color: #007bff;
-        color: white;
-      }
-      .btn-play:hover {
-        background-color: #0056b3;
-      }
-      .btn-clear {
-        background-color: #dc3545;
-        color: white;
-      }
-      .btn-clear:hover {
-        background-color: #c82333;
-      }
-      #labelurl {
-        font-size: 20px;
-        font-weight: bold;
-      }
-      #result {
-        width: 100%;
-        max-width: 800px;
-        overflow-wrap: break-word;
-        margin: 20px auto;
-        padding: 10px;
-        padding-inline: 30px;
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-        display: none;
-      }
-      footer {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        background-color: #333;
-        color: white;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      footer a {
-        color: white;
-        text-decoration: none;
-      }
-      footer .github-icon {
-        width: 20px;
-        height: 20px;
-        vertical-align: middle;
-        margin-left: 10px;
-      }
-      .details {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="test">
-      <label for="url" id="labelurl">URL</label>
-      <input type="text" id="url" />
-      <button onclick="play()" class="btn btn-play">PLAY</button>
-      <button onclick="clearFields()" class="btn btn-clear">CLEAR</button>
-    </div>
+    <meta property="og:title" content="M3U8 Proxy" />
+    <meta
+      property="og:description"
+      content="Playground for testing m3u8 proxy."
+    />
 
-    <div id="result"></div>
-    <div class="container">
-      <video id="player" controls></video>
-    </div>
-
-    <footer>
-      <div class="details">
-        Made by
-        <a
-          href="https://github.com/itzzzme"
-          target="_blank"
-          style="color: #66b3ff; text-decoration: none"
-          >itzzzme</a
-        >
-        🫰
-      </div>
-      <a href="https://github.com/itzzzme/m3u8proxy" target="_blank">
-        <img
-          src="https://img.icons8.com/material-outlined/24/ffffff/github.png"
-          alt="GitHub"
-          class="github-icon"
-        />
-      </a>
-    </footer>
-
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script type="text/javascript">
-      let hls;
+  </head>
 
-      function play() {
+  <body
+    class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 py-8"
+  >
+    <div
+      class="w-full max-w-screen-xl bg-gray-800 rounded-xl shadow-lg p-6 space-y-6"
+    >
+      <div>
+        <h1 class="text-3xl font-bold mb-2">M3U8 Proxy Player</h1>
+        <p class="text-sm text-gray-400">Paste your M3U8 URL and referer.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- URL Input -->
+        <div>
+          <label for="url" class="block text-sm font-medium text-gray-300 mb-1"
+            >M3U8 URL</label
+          >
+          <input
+            type="text"
+            id="url"
+            class="w-full bg-gray-700 border border-gray-600 rounded-sm px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="https://tubeplx.viddsn.cfd/anime/eccbc87e4b5ce2fe28308fd9f2a7baf3/98960e8859d29683ad5984c4bae288af/master.m3u8"
+          />
+        </div>
+
+        <!-- Headers Input -->
+        <div>
+          <label
+            for="headers"
+            class="block text-sm font-medium text-gray-300 mb-1"
+            >Headers (JSON)</label
+          >
+          <textarea
+            id="headers"
+            class="w-full bg-gray-700 border border-gray-600 rounded-sm px-2 py-2 text-white h-12 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+{"referer": "https://vidwish.live/"}</textarea
+          >
+        </div>
+
+        <!-- Button -->
+        <button
+          onclick="copy()"
+          id="copy"
+          class="w-full copy bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-sm transition"
+        >
+          copy url
+        </button>
+        <button
+          onclick="test()"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm transition"
+        >
+          Play Stream
+        </button>
+
+        <!-- Video -->
+        <div class="mt-6">
+          <video
+            id="hls"
+            controls
+            class="w-full rounded-md aspect-video bg-black"
+          ></video>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      console.log(window.location.href);
+
+      function copy() {
         const url = document.getElementById("url").value;
-        const resultDiv = document.getElementById("result");
+        let headers = document.getElementById("headers").value;
+        const copy = document.getElementById("copy");
 
-        resultDiv.style.display = "block";
-        resultDiv.innerHTML = `<span class="result-label">PROXIED_URL: </span><a href="/m3u8-proxy?url=${encodeURIComponent(
+        const location = window.location.href;
+        const properUrl = `${location}m3u8-proxy?url=${encodeURIComponent(
           url
-        )}" target="_blank">${
-          window.location.href
-        }m3u8-proxy?url=${encodeURIComponent(url)}</a>`;
+        )}&headers=${encodeURIComponent(JSON.parse(headers))}`;
 
-        const video = document.getElementById("player");
-        if (hls) {
-          hls.destroy();
+        copy.textContent = "copied!";
+        setTimeout(() => {
+          copy.textContent = "copy url";
+        }, 1000);
+        navigator.clipboard.writeText(properUrl);
+      }
+      function test() {
+        const url = document.getElementById("url").value;
+        let headers = document.getElementById("headers").value;
+
+        try {
+          headers = JSON.parse(headers);
+        } catch (e) {
+          headers = {};
+          alert("Invalid JSON in headers. Reset to {}.");
         }
 
+        console.log("Using URL:", url);
+        console.log("Using Headers:", headers);
+
+        const proxyURL = `/m3u8-proxy?url=${encodeURIComponent(
+          url
+        )}&headers=${encodeURIComponent(JSON.stringify(headers))}`;
         if (Hls.isSupported()) {
-          hls = new Hls();
-          hls.loadSource(`/m3u8-proxy?url=${url}`);
+          const video = document.getElementById("hls");
+          const hls = new Hls();
+
+          hls.loadSource(proxyURL);
           hls.attachMedia(video);
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
-            video.play();
-          });
-        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          video.src = `/m3u8-proxy?url=${url}`;
-          video.addEventListener("loadedmetadata", function () {
-            video.play();
+            console.log("Loaded stream from:", proxyURL);
           });
         }
-      }
-
-      function clearFields() {
-        document.getElementById("url").value = "";
-        document.getElementById("result").style.display = "none";
-        document.getElementById("result").innerHTML = "";
-        const video = document.getElementById("player");
-        if (hls) {
-          hls.destroy();
-        }
-        video.src = "";
       }
     </script>
   </body>
