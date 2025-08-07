@@ -1,108 +1,42 @@
-# M3U8 Proxy Server
+# M3U8-Proxy
 
-Welcome to the M3U8 Proxy Server! Tired of dealing with those pesky CORS errors when trying to stream your M3U8 files? Fear not, because our proxy server is here to save the day!
+Proxies m3u8 files through pure JavaScript.
 
-## 🎯 What This Project Does
+## About
 
-This Node.js application acts as a middleman between your requests and the M3U8 files you're trying to access. Just drop your M3U8 link into the input box, and we'll take care of the rest. Our server proxies the M3U8 file and provides you with a new link to use—free from CORS troubles.
+Some m3u8 files require special headers as well as CORS. This project achieves both by integrating Rob Wu's [CORS proxy](https://github.com/Rob--W/cors-anywhere) and adding a route to proxy m3u8 files.
 
-## Deployment
+## Installation
 
-### Vercel
+1. Clone the repository.
 
-Host your own instance of M3U8-Proxy on vercel
-
-[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/itzzzme/m3u8proxy)
-### Render
-
-Host your own instance of M3U8-Proxy on Render.
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/itzzzme/m3u8proxy)
-
-### Cloudflare-worker
- - Create an example starter worker in your cloudflare account
- - Edit the code of the worker after deploying it
- - Override the code of your starter worker with the code given in `m3u8proxy(cf_worker).js`
- - Deploy your worker
-
-## 🚀 How It Works
-
-1. **Enter Your M3U8 Link**: Simply input your M3U8 URL into the provided input box.
-2. **Get a Proxied Link**: Our server fetches the M3U8 file and proxies it for you.
-3. **Use the Proxied Link**: Replace your original link with the new proxied link in your platform.
-
-## <span>⚙️ Envs</span>
-
-More info can be found in [`.env.example`](https://github.com/itzzzme/m3u8proxy/blob/main/.env.example) file
-
-- `HOST`: host of your proxy server `optional`
-- `PORT`: port number (any) `optional`
-- `PUBLIC_URL`: link of your website  `mandatory`
-- `ALLOWED_ORIGINS`: origins you want to allow  `mandatory`
-
-
-## 🕵️‍♂️ How to Use
-
-If you want to use the proxy directly, append your M3U8 link to the following URL:
-
-[https://<deployed_web_server>/m3u8-proxy?url={url}](https://<deployed_web_server>/m3u8-proxy?url={url})
-
-For example, if your M3U8 link is `https://example.com/stream.m3u8`, you would use:
-
-[https://<deployed_web_server>/m3u8-proxy?url=https://example.com/stream.m3u8](https://<deployed_web_server>/m3u8-proxy?url=https://example.com/stream.m3u8)
-
-## 🎥 Video Demo
-
-You can watch a demo of the proxy server in action using the MP4 video file below:
-
-https://github.com/user-attachments/assets/ae8e74a6-176d-42a4-8590-3b7a2b7182ff
-
-
-
-## 📹 Example Code Snippet
-
-Here’s how you can use Video.js to play the proxied URL:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxied M3U8 Player</title>
-    <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet">
-</head>
-<body>
-    <div class="video-container">
-        <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="640" height="360">
-            <source src="PROXIED_M3U8_URL_HERE" type="application/x-mpegURL">
-        </video>
-    </div>
-
-    <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-hls@latest"></script>
-    <script>
-        var player = videojs('my-video');
-    </script>
-</body>
-</html>
-
+```bash
+git clone https://github.com/yahyaMomin/m3u8-proxy.git
 ```
 
-## 😂 A Note About CORS
+2. Run `bun install`.
+3. Run `bun dev`.
 
-CORS, oh CORS—you're like that friend who always shows up uninvited. But don’t worry, our proxy server is the bouncer that keeps you and your streams happy and stress-free. No more unwanted guests in the form of CORS errors!
+You can configure how the proxy works via a `.env` file; it's relatively self-explanatory.
 
-## 📜 License
+```
+# This file is a template for .env file
+# Copy this file to .env and change the values
 
-This project is licensed under the MIT License. 
+# Web server configuration
+HOST="localhost"
+PORT="3030"
 
-## 🤝 Contributing
+# Public URL to proxy ts files from
+PUBLIC_URL="https://hls-proxy-m3u8.vercel.app"
+```
 
-Feel free to open issues or pull requests if you have suggestions or improvements!
+## Usage
 
-<br/>
+To proxy m3u8 files, use the `/m3u8-proxy` route. All you have to do is input the URL and headers. For example:
 
-<p align="center" style="text-decoration: none;">Made by <a href="https://github.com/itzzzme" target="_blank">itzzzme 
-</a>🫰</p>
+```
+http://localhost:3030/m3u8-proxy?url=https%3A%2F%2Fojkx.vizcloud.co%2Fsimple%2FEqPFJvsQWADtjDlGha7rC8UurFwHuLiwTk17rqk%2BwYMnU94US2El_Po4w12gXe6GptOSQtc%2Fbr%2Flist.m3u8%23.mp4&headers=%7B%22referer%22%3A%22https%3A%2F%2F9anime.pl%22%7D
+```
 
+The URL in this case is `https://ojkx.vizcloud.co/simple/EqPFJvsQWADtjDlGha7rC8UurFwHuLiwTk17rqk+wYMnU94US2El_Po4w12gXe6GptOSQtc/br/list.m3u8#.mp4` and the headers are `{"Referer": "https://9anime.pl"}`. This will then send a request to the m3u8 using the headers, modify the content to use the ts proxy, then proxy each ts file using a CORS proxy. If you need help, please join my [Discord](https://discord.gg/F87wYBtnkC).

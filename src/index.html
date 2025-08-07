@@ -83,8 +83,6 @@
     </div>
 
     <script>
-      console.log(window.location.href);
-
       function copy() {
         const url = document.getElementById("url").value;
         let headers = document.getElementById("headers").value;
@@ -93,7 +91,7 @@
         const location = window.location.href;
         const properUrl = `${location}m3u8-proxy?url=${encodeURIComponent(
           url
-        )}&headers=${encodeURIComponent(JSON.parse(headers))}`;
+        )}&headers=${encodeURIComponent(JSON.stringify(headers))}`;
 
         copy.textContent = "copied!";
         setTimeout(() => {
